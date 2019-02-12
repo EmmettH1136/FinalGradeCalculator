@@ -14,7 +14,7 @@ let currentColor = UIColor(red: 1.0, green: 185.0/255.0, blue: 145.0/255.0, alph
 let redColor = UIColor(red: 1.0, green: 112.0/255.0, blue: 83.0/255.0, alpha: 1.0)
 let greenColor = UIColor(red: 146.0/255.0, green: 221.0/255.0, blue: 145.0/255.0, alpha: 1.0)
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate, UITextFieldDelegate {
     
     
     @IBOutlet weak var textField1: UITextField!
@@ -35,6 +35,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         self.picker1.delegate = self
         self.picker2.dataSource = self
         self.picker2.delegate = self
+        self.textField1.delegate = self
+        self.textField2.delegate = self
+        self.textField3.delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -59,6 +62,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                         if Float(calculateGrade(Float(bings)!, Float(bangs)!, Float(wangs)!)) > 100.0 {
                             view.backgroundColor = redColor
                             extraCredit.text = "You should ask for extra credit."
+                            let choices = ["That's an impossible grade!", "Yikes that looks rough!"]
+                            let yaKnow = Int.random(in: 0...1)
+                            let alertController = UIAlertController(title: choices[yaKnow], message: nil, preferredStyle: .alert)
+                            let thanks = UIAlertAction(title: "Thanks", style: .default, handler: nil)
+                            alertController.addAction(thanks)
+                            alertController.popoverPresentationController?.sourceView = sender as? UIView
+                            
+                            present(alertController, animated: true, completion: nil)
                         } else if Float(calculateGrade(Float(bings)!, Float(bangs)!, Float(wangs)!)) <= 100.0 {
                             view.backgroundColor = greenColor
                             extraCredit.text = "Good luck on that test!"
@@ -138,5 +149,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             }
         }
         
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // called when 'return' key pressed. return false to ignore.
+        textField.resignFirstResponder()
+        return true
     }
 }
